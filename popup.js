@@ -41,19 +41,25 @@ document.addEventListener("DOMContentLoaded", function () {
     const month = String(today.getMonth() + 1).padStart(2, "0");
     const day = String(today.getDate()).padStart(2, "0");
     const formattedDate = `${year}-${month}-${day}`;
+    // New selectors will be defined here.
+    const loanPageSelectors = [
+      "#selectorForField2",
+      "#selectorForField3",
+      "#selectorForField4",
+      "#selectorForField14",
+      "#selectorForField22",
+    ];
+    const bankPageSelectors = [
+      "#selectorForField5",
+      "#selectorForField6",
+      "#selectorForField8",
+      "#selectorForField15",
+      "#selectorForField23",
+    ];
 
     try {
-      const loanData = await scrapeTab(loanTabId, [
-        "#textField",
-        "input[name='ctl00$ContentPlaceHolder1$txtEmailAddress']",
-        "#loanName",
-      ]);
-      const bankData = await scrapeTab(bankTabId, [
-        "#textField",
-        ".balance",
-        "input[name='account']",
-        "input[name='ctl00$ContentPlaceHolder1$txtEmailAddress']",
-      ]);
+      const loanData = await scrapeTab(loanTabId, loanPageSelectors);
+      const bankData = await scrapeTab(bankTabId, bankPageSelectors);
 
       const tsvString = createSingleRowTSV(
         formattedDate,
@@ -108,28 +114,28 @@ document.addEventListener("DOMContentLoaded", function () {
   function createSingleRowTSV(formattedDate, loanData, bankData, customText) {
     const row = [
       formattedDate, // 1
-      loanData["#textField"], // 2
-      "Loan Page " + loanData["#loanName"], // 3
-      loanData["input[name='ctl00$ContentPlaceHolder1$txtEmailAddress']"], //4
-      "bank " + bankData["input[name='account']"], //5
-      bankData[".balance"], //6
+      loanData["#selectorForField2"], // 2
+      loanData["#selectorForField3"], // 3
+      loanData["#selectorForField4"], //4
+      bankData["#selectorForField5"], //5
+      bankData["#selectorForField6"], //6
       "", // 7
-      bankData["#textField"], //8
+      bankData["#selectorForField8"], //8
       "", // 9
       "", // 10
       "None", // 11
       "", // 12
       "", //13
-      loanData["#textField"], //14
-      bankData["input[name='ctl00$ContentPlaceHolder1$txtEmailAddress']"], //15
+      loanData["#selectorForField14"], //14
+      bankData["#selectorForField15"], //15
       "", // 16
       customText, // 17, also the text field that appears in the popup
       customText, // 18
       "", // 19
       "", // 20
       "", //21
-      loanData["input[name='ctl00$ContentPlaceHolder1$txtEmailAddress']"], //22
-      "bank account " + bankData["input[name='account']"], //23
+      loanData["#selectorForField22"], //22
+      bankData["#selectorForField23"], //23
     ].join("\t");
     return row;
   }
