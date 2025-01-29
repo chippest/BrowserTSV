@@ -43,11 +43,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const formattedDate = `${year}-${month}-${day}`;
 
     // Selectors for the loan page (page 1)
-    const loanPageSelectors = [
-      "input[name='loan_amount']", // Field 14 (Loan Amount)
+    let loanPageSelectors = [
+      "input[name='loan_amount']", // Field 14
       "#selectorForField17",
-      "select[name='term_of_agreements_in_days']", //Field 23 (Term of Agreement)
-      "#selectorForField22",
+      "select[name='term_of_agreements_in_days']", // Field 23
     ];
 
     // Selectors for the bank page (page 2)
@@ -62,12 +61,22 @@ document.addEventListener("DOMContentLoaded", function () {
     try {
       const loanData = await scrapeTab(loanTabId, loanPageSelectors);
       const bankData = await scrapeTab(bankTabId, bankPageSelectors);
-
+      let payrollInterval = "";
+      if (
+        loanData["select[name='term_of_agreements_in_days']"] !== "" &&
+        loanData["select[name='term_of_agreements_in_days']"] !== "1"
+      ) {
+        const newLoanData = await scrapeTab(loanTabId, [
+          "select[name='payroll_interval']",
+        ]);
+        payrollInterval = newLoanData["select[name='payroll_interval']"];
+      }
       const tsvString = createSingleRowTSV(
         formattedDate,
         loanData,
         bankData,
-        customTextField.value
+        customTextField.value,
+        payrollInterval
       );
 
       copyToClipboard(tsvString);
@@ -112,7 +121,13 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  function createSingleRowTSV(formattedDate, loanData, bankData, customText) {
+  function createSingleRowTSV(
+    formattedDate,
+    loanData,
+    bankData,
+    customText,
+    payrollInterval
+  ) {
     const fullName =
       bankData[
         ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(2) > td"
@@ -130,7 +145,6 @@ document.addEventListener("DOMContentLoaded", function () {
         : phoneNumber.replace(/\D/g, "").substring(1);
     let firstName = "Not found";
     let lastName = "Not found";
-
     if (fullName !== "Not found") {
       const nameParts = fullName.split(" ");
       lastName = nameParts.pop();
@@ -138,7 +152,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     const formattedTermOfAgreement =
       termOfAgreement === "1" ? "" : termOfAgreement;
-
     const row = [
       formattedDate, // 1
       firstName, // 2
@@ -160,14 +173,14 @@ document.addEventListener("DOMContentLoaded", function () {
       "", // 12
       "", //13
       loanData["input[name='loan_amount']"], //14
-      "", // 15
+      "", //15
       "", // 16
-      loanData["#selectorForField17"], // 17, also a scraped field.
+      loanData["#selectorForField17"], // 17
       customText, // 18
       "", // 19
       "", // 20
       "", //21
-      loanData["#selectorForField22"], //22
+      payrollInterval, //22
       formattedTermOfAgreement, //23
     ].join("\t");
     return row;
