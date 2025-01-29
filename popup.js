@@ -47,6 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "#selectorForField3",
       "#selectorForField4",
       "#selectorForField14",
+      "#selectorForField17",
       "#selectorForField22",
     ];
     const bankPageSelectors = [
@@ -129,7 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
       loanData["#selectorForField14"], //14
       bankData["#selectorForField15"], //15
       "", // 16
-      customText, // 17, also the text field that appears in the popup
+      loanData["#selectorForField17"], // 17, also a scraped field.
       customText, // 18
       "", // 19
       "", // 20
