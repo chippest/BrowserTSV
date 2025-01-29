@@ -44,11 +44,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Selectors for the loan page (page 1)
     let loanPageSelectors = [
-      "input[name='loan_amount']", // Field 14
-      "#selectorForField17",
+      "input[name='loan_amount']",
       "select[name='term_of_agreements_in_days']", // Field 23
+      "input[name='payment_date_1']", //Field 17
     ];
-
     // Selectors for the bank page (page 2)
     const bankPageSelectors = [
       ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(2) > td", // Field 2 (Full Name)
@@ -57,7 +56,6 @@ document.addEventListener("DOMContentLoaded", function () {
       ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(8) > td", // Field 8 (State)
       ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(10) > td", // Field 6 (Bank Address)
     ];
-
     try {
       const loanData = await scrapeTab(loanTabId, loanPageSelectors);
       const bankData = await scrapeTab(bankTabId, bankPageSelectors);
@@ -138,6 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
       ];
     const termOfAgreement =
       loanData["select[name='term_of_agreements_in_days']"];
+    const paymentDate = loanData["input[name='payment_date_1']"];
 
     const formattedPhoneNumber =
       phoneNumber === "Not found"
@@ -152,6 +151,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     const formattedTermOfAgreement =
       termOfAgreement === "1" ? "" : termOfAgreement;
+    let daysUntilPayment = "Not found";
+    if (paymentDate !== "Not found") {
+      const paymentDateObject = new Date(paymentDate);
+      const currentDate = new Date();
+      const timeDiff = paymentDateObject.getTime() - currentDate.getTime();
+      daysUntilPayment = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    }
+
     const row = [
       formattedDate, // 1
       firstName, // 2
@@ -171,17 +178,17 @@ document.addEventListener("DOMContentLoaded", function () {
       "", // 10
       "None", // 11
       "", // 12
-      "", //13
+      "", // 13
       loanData["input[name='loan_amount']"], //14
-      "", //15
+      "", // 15
       "", // 16
-      loanData["#selectorForField17"], // 17
+      daysUntilPayment, // 17
       customText, // 18
       "", // 19
       "", // 20
       "", //21
-      payrollInterval, //22
-      formattedTermOfAgreement, //23
+      payrollInterval, // 22
+      formattedTermOfAgreement, // 23
     ].join("\t");
     return row;
   }
