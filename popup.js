@@ -58,6 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
       ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(8) > td", // Field 8 (State)
       ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(10) > td", // Field 6 (Bank Address)
     ];
+
     try {
       const loanData = await scrapeTab(loanTabId, loanPageSelectors);
       const bankData = await scrapeTab(bankTabId, bankPageSelectors);
@@ -75,7 +76,6 @@ document.addEventListener("DOMContentLoaded", function () {
       resultsDiv.textContent = "Error during scraping:" + error.message;
     }
   }
-
   async function scrapeTab(tabId, selectors) {
     return new Promise((resolve, reject) => {
       chrome.scripting.executeScript(
@@ -121,6 +121,8 @@ document.addEventListener("DOMContentLoaded", function () {
       bankData[
         ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(6) > td"
       ];
+    const termOfAgreement =
+      loanData["select[name='term_of_agreements_in_days']"];
 
     const formattedPhoneNumber =
       phoneNumber === "Not found"
@@ -134,6 +136,9 @@ document.addEventListener("DOMContentLoaded", function () {
       lastName = nameParts.pop();
       firstName = nameParts.join(" ");
     }
+    const formattedTermOfAgreement =
+      termOfAgreement === "1" ? "" : termOfAgreement;
+
     const row = [
       formattedDate, // 1
       firstName, // 2
@@ -163,7 +168,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "", // 20
       "", //21
       loanData["#selectorForField22"], //22
-      loanData["select[name='term_of_agreements_in_days']"], //23
+      formattedTermOfAgreement, //23
     ].join("\t");
     return row;
   }
