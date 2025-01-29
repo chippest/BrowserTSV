@@ -33,21 +33,28 @@ document.addEventListener("DOMContentLoaded", function () {
     resultsDiv.textContent = "Scraping...";
 
     try {
-      const loanData = await scrapeTab(loanTabId, ["#textField", "#loanName"]);
+      const loanData = await scrapeTab(loanTabId, [
+        "#textField",
+        "#loanName",
+        "input[name='ctl00$ContentPlaceHolder1$txtEmailAddress']",
+      ]);
       const bankData = await scrapeTab(bankTabId, [
         "#textField",
         ".balance",
         "input[name='account']",
+        "input[name='ctl00$ContentPlaceHolder1$txtEmailAddress']",
       ]);
 
       resultsDiv.innerHTML = `
                 <h2>Loan Page Data:</h2>
                  <p>Text Field Value: ${loanData["#textField"]}</p>
                  <p>Loan Name: ${loanData["#loanName"]}</p>
+                   <p>Email Address: ${loanData["input[name='ctl00$ContentPlaceHolder1$txtEmailAddress']"]}</p>
                 <h2>Bank Statement Data:</h2>
                 <p>Text Field Value: ${bankData["#textField"]}</p>
                  <p>Balance: ${bankData[".balance"]}</p>
                 <p>Account Name: ${bankData["input[name='account']"]}</p>
+                  <p>Email Address: ${bankData["input[name='ctl00$ContentPlaceHolder1$txtEmailAddress']"]}</p>
             `;
     } catch (error) {
       resultsDiv.textContent = "Error during scraping:" + error.message;
