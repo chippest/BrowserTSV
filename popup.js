@@ -71,9 +71,11 @@ document.addEventListener("DOMContentLoaded", function () {
       ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(8) > td", // Field 8 (State)
       ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(10) > td", // Field 6 (Bank Address)
     ];
+
     try {
       const loanData = await scrapeTab(loanTabId, loanPageSelectors);
       const bankData = await scrapeTab(bankTabId, bankPageSelectors);
+
       let payrollInterval = "";
       if (
         loanData["select[name='term_of_agreements_in_days']"] !== "" &&
@@ -175,6 +177,24 @@ document.addEventListener("DOMContentLoaded", function () {
     const formattedTermOfAgreement =
       termOfAgreement === "1" ? "" : termOfAgreement;
 
+    let additionalCells = [];
+    if (formattedTermOfAgreement === "2") {
+      additionalCells = [
+        '=ARRAY_CONSTRAIN(ARRAYFORMULA(IFS(INDIRECT("W"&ROW())=1,INDIRECT("U"&ROW()),INDIRECT("W"&ROW())=2,INDIRECT("U"&ROW())/2,INDIRECT("W"&ROW())=3,INDIRECT("U"&ROW())/3,INDIRECT("W"&ROW())<=2,"--")), 1, 1)',
+        '=IF(INDIRECT("W"&ROW())<>0,INDIRECT("T"&ROW()),"--")',
+        '=ARRAY_CONSTRAIN(ARRAYFORMULA(IFS(INDIRECT("W"&ROW())=2,INDIRECT("U"&ROW())/2,INDIRECT("W"&ROW())=3,INDIRECT("U"&ROW())/3,INDIRECT("W"&ROW())<=2,"--")), 1, 1)',
+        '=ARRAY_CONSTRAIN(ARRAYFORMULA(IFS(AND(INDIRECT("W"&ROW())>1,INDIRECT("V"&ROW())=0),"Payroll intervals?",INDIRECT("W"&ROW())=0,"--",INDIRECT("W"&ROW())=1,"--",AND(INDIRECT("W"&ROW())=2,INDIRECT("V"&ROW())="weekly"),INDIRECT("T"&ROW())+7,AND(INDIRECT("W"&ROW())=2,INDIRECT("V"&ROW())="bi-weekly"),INDIRECT("T"&ROW())+14,AND(INDIRECT("W"&ROW())=2,INDIRECT("V"&ROW())="monthly"),EDATE(INDIRECT("T"&ROW()),1),AND(INDIRECT("W"&ROW())=3,INDIRECT("V"&ROW())="weekly"),INDIRECT("T"&ROW())+7,AND(INDIRECT("W"&ROW())=3,INDIRECT("V"&ROW())="bi-weekly"),INDIRECT("T"&ROW())+14,AND(INDIRECT("W"&ROW())=3,INDIRECT("V"&ROW())="monthly"),EDATE(INDIRECT("T"&ROW()),1))), 1, 1)',
+      ];
+    } else if (formattedTermOfAgreement === "3") {
+      additionalCells = [
+        '=ARRAY_CONSTRAIN(ARRAYFORMULA(IFS(INDIRECT("W"&ROW())=1,INDIRECT("U"&ROW()),INDIRECT("W"&ROW())=2,INDIRECT("U"&ROW())/2,INDIRECT("W"&ROW())=3,INDIRECT("U"&ROW())/3,INDIRECT("W"&ROW())<=2,"--")), 1, 1)',
+        '=IF(INDIRECT("W"&ROW())<>0,INDIRECT("T"&ROW()),"--")',
+        '=ARRAY_CONSTRAIN(ARRAYFORMULA(IFS(INDIRECT("W"&ROW())=2,INDIRECT("U"&ROW())/2,INDIRECT("W"&ROW())=3,INDIRECT("U"&ROW())/3,INDIRECT("W"&ROW())<=2,"--")), 1, 1)',
+        '=ARRAY_CONSTRAIN(ARRAYFORMULA(IFS(AND(INDIRECT("W"&ROW())>1,INDIRECT("V"&ROW())=0),"Payroll intervals?",INDIRECT("W"&ROW())=0,"--",INDIRECT("W"&ROW())=1,"--",AND(INDIRECT("W"&ROW())=2,INDIRECT("V"&ROW())="weekly"),INDIRECT("T"&ROW())+7,AND(INDIRECT("W"&ROW())=2,INDIRECT("V"&ROW())="bi-weekly"),INDIRECT("T"&ROW())+14,AND(INDIRECT("W"&ROW())=2,INDIRECT("V"&ROW())="monthly"),EDATE(INDIRECT("T"&ROW()),1),AND(INDIRECT("W"&ROW())=3,INDIRECT("V"&ROW())="weekly"),INDIRECT("T"&ROW())+7,AND(INDIRECT("W"&ROW())=3,INDIRECT("V"&ROW())="bi-weekly"),INDIRECT("T"&ROW())+14,AND(INDIRECT("W"&ROW())=3,INDIRECT("V"&ROW())="monthly"),EDATE(INDIRECT("T"&ROW()),1))), 1, 1)',
+        '=IF(INDIRECT("W"&ROW())=3,INDIRECT("U"&ROW())/3,"--")',
+        '=ARRAY_CONSTRAIN(ARRAYFORMULA(IFS(AND(INDIRECT("W"&ROW())=3,INDIRECT("V"&ROW())=0),"Payroll intervals?",INDIRECT("W"&ROW())<3,"--",AND(INDIRECT("W"&ROW())=3,INDIRECT("V"&ROW())="weekly"),INDIRECT("T"&ROW())+14,AND(INDIRECT("W"&ROW())=3,INDIRECT("V"&ROW())="bi-weekly"),INDIRECT("T"&ROW())+28,AND(INDIRECT("W"&ROW())=3,INDIRECT("V"&ROW())="monthly"),EDATE(INDIRECT("T"&ROW()),2))), 1, 1)',
+      ];
+    }
     const row = [
       formattedDate, // 1
       firstName, // 2
@@ -205,6 +225,7 @@ document.addEventListener("DOMContentLoaded", function () {
       '=IF(INDIRECT("N"&ROW())="","",INDIRECT("N"&ROW())+INDIRECT("O"&ROW())-INDIRECT("P"&ROW()))',
       payrollInterval, // 22
       formattedTermOfAgreement, // 23
+      ...additionalCells, //24, 25, 26, 27, 28, 29
     ];
     const filteredRow = row
       .map((cell) => (cell === "" ? undefined : cell))
