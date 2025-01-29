@@ -41,19 +41,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const month = String(today.getMonth() + 1).padStart(2, "0");
     const day = String(today.getDate()).padStart(2, "0");
     const formattedDate = `${year}-${month}-${day}`;
-    // New selectors will be defined here.
+
+    // Selectors for the loan page (page 1)
     const loanPageSelectors = [
-      "#selectorForField2",
-      "#selectorForField3",
-      "#selectorForField4",
       "#selectorForField14",
       "#selectorForField17",
       "#selectorForField22",
     ];
+
+    // Selectors for the bank page (page 2)
     const bankPageSelectors = [
-      "#selectorForField5",
-      "#selectorForField6",
-      "#selectorForField8",
+      ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(2) > td", // Field 2 (Full Name)
+      ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(4) > td", // Field 4 (Email)
+      ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(6) > td", // Field 5 (Phone)
+      ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(8) > td", // Field 8 (State)
+      ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(12) > td", // Field 6 (Bank Address)
       "#selectorForField15",
       "#selectorForField23",
     ];
@@ -75,7 +77,6 @@ document.addEventListener("DOMContentLoaded", function () {
       resultsDiv.textContent = "Error during scraping:" + error.message;
     }
   }
-
   async function scrapeTab(tabId, selectors) {
     return new Promise((resolve, reject) => {
       chrome.scripting.executeScript(
@@ -115,13 +116,23 @@ document.addEventListener("DOMContentLoaded", function () {
   function createSingleRowTSV(formattedDate, loanData, bankData, customText) {
     const row = [
       formattedDate, // 1
-      loanData["#selectorForField2"], // 2
+      bankData[
+        ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(2) > td"
+      ], // 2
       loanData["#selectorForField3"], // 3
-      loanData["#selectorForField4"], //4
-      bankData["#selectorForField5"], //5
-      bankData["#selectorForField6"], //6
+      bankData[
+        ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(4) > td"
+      ], //4
+      bankData[
+        ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(6) > td"
+      ], //5
+      bankData[
+        ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(12) > td"
+      ], //6
       "", // 7
-      bankData["#selectorForField8"], //8
+      bankData[
+        ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(8) > td"
+      ], //8
       "", // 9
       "", // 10
       "None", // 11
@@ -140,7 +151,6 @@ document.addEventListener("DOMContentLoaded", function () {
     ].join("\t");
     return row;
   }
-
   function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(
       function () {},
