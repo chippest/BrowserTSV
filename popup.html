@@ -24,6 +24,9 @@
         border: 1px solid #ccc;
         padding: 10px;
       }
+      #default-text-setting {
+        margin-bottom: 10px;
+      }
     </style>
   </head>
   <body>
@@ -38,6 +41,17 @@
       <label for="bankStatementSelect">Bank Statement:</label>
       <select id="bankStatementSelect"></select>
     </div>
+    <div id="default-text-setting">
+      <label for="defaultTextField">Default text for field 18:</label>
+      <input type="text" id="defaultTextField" />
+      <button id="saveDefaultButton">Save Default</button>
+    </div>
+
+    <input
+      type="text"
+      id="customTextField"
+      placeholder="Enter text for field 18"
+    />
 
     <button id="scrapeButton">Scrape Data</button>
 

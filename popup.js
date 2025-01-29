@@ -3,10 +3,25 @@ document.addEventListener("DOMContentLoaded", function () {
   const bankStatementSelect = document.getElementById("bankStatementSelect");
   const scrapeButton = document.getElementById("scrapeButton");
   const resultsDiv = document.getElementById("results");
-  const customTextField = document.createElement("input");
-  customTextField.type = "text";
-  customTextField.placeholder = "Enter text for field 18";
-  resultsDiv.parentNode.insertBefore(customTextField, resultsDiv);
+  const customTextField = document.getElementById("customTextField");
+  const defaultTextField = document.getElementById("defaultTextField");
+  const saveDefaultButton = document.getElementById("saveDefaultButton");
+
+  // Load the saved default value on popup open
+  chrome.storage.sync.get(["defaultText"], function (result) {
+    if (result.defaultText) {
+      customTextField.value = result.defaultText;
+      defaultTextField.value = result.defaultText;
+    }
+  });
+
+  saveDefaultButton.addEventListener("click", function () {
+    const defaultText = defaultTextField.value;
+    chrome.storage.sync.set({ defaultText: defaultText }, function () {
+      customTextField.value = defaultText;
+      console.log("Default text saved: " + defaultText);
+    });
+  });
 
   // Function to populate the select dropdowns
   function populateTabDropdowns() {
