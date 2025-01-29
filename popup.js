@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
       ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(4) > td", // Field 4 (Email)
       ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(6) > td", // Field 5 (Phone)
       ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(8) > td", // Field 8 (State)
-      ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(12) > td", // Field 6 (Bank Address)
+      ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(10) > td", // Field 6 (Bank Address)
       "#selectorForField15",
       "#selectorForField23",
     ];
@@ -114,6 +114,10 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function createSingleRowTSV(formattedDate, loanData, bankData, customText) {
+    const fullName =
+      bankData[
+        ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(2) > td"
+      ];
     const phoneNumber =
       bankData[
         ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(6) > td"
@@ -123,19 +127,25 @@ document.addEventListener("DOMContentLoaded", function () {
       phoneNumber === "Not found"
         ? "Not found"
         : phoneNumber.replace(/\D/g, "").substring(1);
+    let firstName = "Not found";
+    let lastName = "Not found";
+
+    if (fullName !== "Not found") {
+      const nameParts = fullName.split(" ");
+      lastName = nameParts.pop();
+      firstName = nameParts.join(" ");
+    }
 
     const row = [
       formattedDate, // 1
-      bankData[
-        ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(2) > td"
-      ], // 2
-      loanData["#selectorForField3"], // 3
+      firstName, // 2
+      lastName, // 3
       bankData[
         ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(4) > td"
       ], //4
       formattedPhoneNumber, //5
       bankData[
-        ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(12) > td"
+        ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(10) > td"
       ], //6
       "", // 7
       bankData[
@@ -159,7 +169,6 @@ document.addEventListener("DOMContentLoaded", function () {
     ].join("\t");
     return row;
   }
-
   function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(
       function () {},
