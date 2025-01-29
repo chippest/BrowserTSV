@@ -149,8 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
       lastName = nameParts.pop();
       firstName = nameParts.join(" ");
     }
-    const formattedTermOfAgreement =
-      termOfAgreement === "1" ? "" : termOfAgreement;
+
     let daysUntilPayment = "Not found";
     if (paymentDate !== "Not found") {
       const paymentDateObject = new Date(paymentDate);
@@ -158,6 +157,8 @@ document.addEventListener("DOMContentLoaded", function () {
       const timeDiff = paymentDateObject.getTime() - currentDate.getTime();
       daysUntilPayment = Math.ceil(timeDiff / (1000 * 3600 * 24));
     }
+    const formattedTermOfAgreement =
+      termOfAgreement === "1" ? "" : termOfAgreement;
 
     const row = [
       formattedDate, // 1
@@ -169,28 +170,31 @@ document.addEventListener("DOMContentLoaded", function () {
       formattedPhoneNumber, //5
       bankData[
         ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(10) > td"
-      ], //6
-      "", // 7
+      ], //6 // 7
+      ,
       bankData[
         ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(8) > td"
-      ], //8
-      "", // 9
-      "", // 10
-      "None", // 11
-      "", // 12
-      "", // 13
-      loanData["input[name='loan_amount']"], //14
-      "", // 15
-      "", // 16
+      ], //8 // 9 // 10
+      ,
+      ,
+      "None", // 11 // 12 //13
+      ,
+      ,
+      loanData["input[name='loan_amount']"], //14 // 15 // 16
+      ,
+      ,
       daysUntilPayment, // 17
-      customText, // 18
-      "", // 19
-      "", // 20
-      "", //21
+      customText, // 18 // 19 // 20 //21
+      ,
+      ,
+      ,
       payrollInterval, // 22
       formattedTermOfAgreement, // 23
-    ].join("\t");
-    return row;
+    ];
+    const filteredRow = row
+      .map((cell) => (cell === "" ? undefined : cell))
+      .join("\t");
+    return filteredRow;
   }
 
   function copyToClipboard(text) {
