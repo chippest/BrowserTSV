@@ -181,13 +181,13 @@ document.addEventListener("DOMContentLoaded", function () {
       ,
       ,
       loanData["input[name='loan_amount']"], //14 // 15 // 16
-      ,
+      '=IF(INDIRECT("N"&ROW())=0,"",IF(INDIRECT("H"&ROW())="MB",INDIRECT("N"&ROW())*17%,INDIRECT("N"&ROW())*15%))',
       ,
       daysUntilPayment, // 17
       customText, // 18 // 19 // 20 //21
       ,
-      ,
-      ,
+      '=IF(INDIRECT("A"&ROW())<>0, INDIRECT("A"&ROW())+INDIRECT("Q"&ROW()), " ")',
+      '=IF(INDIRECT("N"&ROW())="","",INDIRECT("N"&ROW())+INDIRECT("O"&ROW())-INDIRECT("P"&ROW()))',
       payrollInterval, // 22
       formattedTermOfAgreement, // 23
     ];
