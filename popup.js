@@ -44,8 +44,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Selectors for the loan page (page 1)
     const loanPageSelectors = [
-      "#selectorForField14",
+      "input[name='loan_amount']", // Field 14 (Loan Amount)
       "#selectorForField17",
+      "select[name='term_of_agreements_in_days']", //Field 23 (Term of Agreement)
       "#selectorForField22",
     ];
 
@@ -55,10 +56,8 @@ document.addEventListener("DOMContentLoaded", function () {
       ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(4) > td", // Field 4 (Email)
       ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(6) > td", // Field 5 (Phone)
       ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(8) > td", // Field 8 (State)
-      ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(12) > td", // Field 6 (Bank Address)
-      "#selectorForField23",
+      ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(10) > td", // Field 6 (Bank Address)
     ];
-
     try {
       const loanData = await scrapeTab(loanTabId, loanPageSelectors);
       const bankData = await scrapeTab(bankTabId, bankPageSelectors);
@@ -76,6 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
       resultsDiv.textContent = "Error during scraping:" + error.message;
     }
   }
+
   async function scrapeTab(tabId, selectors) {
     return new Promise((resolve, reject) => {
       chrome.scripting.executeScript(
@@ -143,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
       ], //4
       formattedPhoneNumber, //5
       bankData[
-        ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(12) > td"
+        ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(10) > td"
       ], //6
       "", // 7
       bankData[
@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "None", // 11
       "", // 12
       "", //13
-      loanData["#selectorForField14"], //14
+      loanData["input[name='loan_amount']"], //14
       "", // 15
       "", // 16
       loanData["#selectorForField17"], // 17, also a scraped field.
@@ -163,7 +163,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "", // 20
       "", //21
       loanData["#selectorForField22"], //22
-      bankData["#selectorForField23"], //23
+      loanData["select[name='term_of_agreements_in_days']"], //23
     ].join("\t");
     return row;
   }
