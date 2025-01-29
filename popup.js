@@ -45,17 +45,9 @@ document.addEventListener("DOMContentLoaded", function () {
         "input[name='ctl00$ContentPlaceHolder1$txtEmailAddress']",
       ]);
 
-      resultsDiv.innerHTML = `
-                <h2>Loan Page Data:</h2>
-                 <p>Text Field Value: ${loanData["#textField"]}</p>
-                 <p>Loan Name: ${loanData["#loanName"]}</p>
-                   <p>Email Address: ${loanData["input[name='ctl00$ContentPlaceHolder1$txtEmailAddress']"]}</p>
-                <h2>Bank Statement Data:</h2>
-                <p>Text Field Value: ${bankData["#textField"]}</p>
-                 <p>Balance: ${bankData[".balance"]}</p>
-                <p>Account Name: ${bankData["input[name='account']"]}</p>
-                  <p>Email Address: ${bankData["input[name='ctl00$ContentPlaceHolder1$txtEmailAddress']"]}</p>
-            `;
+      const tsvString = convertToTSV(loanData, bankData);
+      copyToClipboard(tsvString);
+      resultsDiv.textContent = "Data copied to clipboard as TSV!";
     } catch (error) {
       resultsDiv.textContent = "Error during scraping:" + error.message;
     }
@@ -95,5 +87,42 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       );
     });
+  }
+
+  function convertToTSV(loanData, bankData) {
+    const header = [
+      "Tab",
+      "Text Field",
+      "Loan Name",
+      "Email Address",
+      "Balance",
+      "Account Name",
+    ].join("\t");
+    const loanRow = [
+      "Loan Page",
+      loanData["#textField"],
+      loanData["#loanName"],
+      loanData["input[name='ctl00$ContentPlaceHolder1$txtEmailAddress']"],
+      " ",
+      " ",
+    ].join("\t");
+    const bankRow = [
+      "Bank Statement",
+      bankData["#textField"],
+      " ",
+      bankData["input[name='ctl00$ContentPlaceHolder1$txtEmailAddress']"],
+      bankData[".balance"],
+      bankData["input[name='account']"],
+    ].join("\t");
+    return header + "\n" + loanRow + "\n" + bankRow;
+  }
+
+  function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(
+      function () {},
+      function (err) {
+        console.error("Could not copy text: ", err);
+      }
+    );
   }
 });
