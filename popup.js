@@ -114,6 +114,16 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function createSingleRowTSV(formattedDate, loanData, bankData, customText) {
+    const phoneNumber =
+      bankData[
+        ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(6) > td"
+      ];
+
+    const formattedPhoneNumber =
+      phoneNumber === "Not found"
+        ? "Not found"
+        : phoneNumber.replace(/\D/g, "").substring(1);
+
     const row = [
       formattedDate, // 1
       bankData[
@@ -123,9 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
       bankData[
         ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(4) > td"
       ], //4
-      bankData[
-        ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(6) > td"
-      ], //5
+      formattedPhoneNumber, //5
       bankData[
         ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(12) > td"
       ], //6
@@ -151,6 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
     ].join("\t");
     return row;
   }
+
   function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(
       function () {},
