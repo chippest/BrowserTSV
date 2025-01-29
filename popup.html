@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tab Scraper</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        min-width: 350px;
+      }
+      .tab-select {
+        margin-bottom: 10px;
+      }
+      select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+      }
+      button {
+        padding: 10px;
+        margin-top: 10px;
+      }
+      #results {
+        margin-top: 20px;
+        border: 1px solid #ccc;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Select Tabs</h1>
+
+    <div class="tab-select">
+      <label for="loanPageSelect">Loan Page:</label>
+      <select id="loanPageSelect"></select>
+    </div>
+
+    <div class="tab-select">
+      <label for="bankStatementSelect">Bank Statement:</label>
+      <select id="bankStatementSelect"></select>
+    </div>
+
+    <button id="scrapeButton">Scrape Data</button>
+
+    <div id="results"></div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

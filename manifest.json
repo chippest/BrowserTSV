@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Tab Scraper",
+  "version": "1.0",
+  "description": "Select two tabs and scrape data.",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": ["tabs", "activeTab", "scripting"],
+  "host_permissions": ["<all_urls>"]
+}
