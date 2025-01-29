@@ -55,8 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
       ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(4) > td", // Field 4 (Email)
       ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(6) > td", // Field 5 (Phone)
       ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(8) > td", // Field 8 (State)
-      ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(10) > td", // Field 6 (Bank Address)
-      "#selectorForField15",
+      ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(12) > td", // Field 6 (Bank Address)
       "#selectorForField23",
     ];
 
@@ -122,7 +121,6 @@ document.addEventListener("DOMContentLoaded", function () {
       bankData[
         ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(6) > td"
       ];
-
     const formattedPhoneNumber =
       phoneNumber === "Not found"
         ? "Not found"
@@ -135,7 +133,6 @@ document.addEventListener("DOMContentLoaded", function () {
       lastName = nameParts.pop();
       firstName = nameParts.join(" ");
     }
-
     const row = [
       formattedDate, // 1
       firstName, // 2
@@ -145,7 +142,7 @@ document.addEventListener("DOMContentLoaded", function () {
       ], //4
       formattedPhoneNumber, //5
       bankData[
-        ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(10) > td"
+        ".table.table-sm.table-bordered.fs-6.table-condensed.gx-1.gy-1.border-1 > tbody > tr:nth-child(12) > td"
       ], //6
       "", // 7
       bankData[
@@ -157,8 +154,8 @@ document.addEventListener("DOMContentLoaded", function () {
       "", // 12
       "", //13
       loanData["#selectorForField14"], //14
-      bankData["#selectorForField15"], //15
-      "", // 16
+      //  bankData["#selectorForField15"], // Removed 15
+      // "",// Removed 16
       loanData["#selectorForField17"], // 17, also a scraped field.
       customText, // 18
       "", // 19
@@ -169,6 +166,7 @@ document.addEventListener("DOMContentLoaded", function () {
     ].join("\t");
     return row;
   }
+
   function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(
       function () {},
