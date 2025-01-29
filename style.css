@@ -22,3 +22,32 @@ button {
 #default-text-setting {
   margin-bottom: 10px;
 }
+#defaultTextField {
+  padding: 0.5rem;
+  /* font-size: 1rem; */
+}
+* {
+  letter-spacing: 0.1rem;
+}
+input,
+select {
+  border: 1px solid black;
+  border-radius: 7px;
+}
+button {
+  border: none;
+  background: #000;
+  color: white;
+  font-weight: 700;
+  border-radius: 10px;
+  transition: 0.2s all;
+
+  &:hover {
+    color: black;
+    background: rgb(199, 199, 199);
+  }
+  &:active {
+    scale: 0.9;
+    background: white;
+  }
+}
