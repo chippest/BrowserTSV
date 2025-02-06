@@ -94,8 +94,9 @@ document.addEventListener("DOMContentLoaded", function () {
         payrollInterval
       );
 
-      copyToClipboard(tsvString);
-      resultsDiv.textContent = "Data copied to clipboard as TSV!";
+      // Call function to send TSV data to Google Sheet
+      sendToGoogleSheet(tsvString);
+      resultsDiv.textContent = "Data sent to Google Sheet!";
     } catch (error) {
       resultsDiv.textContent = "Error during scraping:" + error.message;
     }
@@ -190,7 +191,7 @@ document.addEventListener("DOMContentLoaded", function () {
         '=ARRAY_CONSTRAIN(ARRAYFORMULA(IFS(INDIRECT("W"&ROW())=1,INDIRECT("U"&ROW()),INDIRECT("W"&ROW())=2,INDIRECT("U"&ROW())/2,INDIRECT("W"&ROW())=3,INDIRECT("U"&ROW())/3,INDIRECT("W"&ROW())<=2,"--")), 1, 1)',
         '=IF(INDIRECT("W"&ROW())<>0,INDIRECT("T"&ROW()),"--")',
         '=ARRAY_CONSTRAIN(ARRAYFORMULA(IFS(INDIRECT("W"&ROW())=2,INDIRECT("U"&ROW())/2,INDIRECT("W"&ROW())=3,INDIRECT("U"&ROW())/3,INDIRECT("W"&ROW())<=2,"--")), 1, 1)',
-        '=ARRAY_CONSTRAIN(ARRAYFORMULA(IFS(AND(INDIRECT("W"&ROW())>1,INDIRECT("V"&ROW())=0),"Payroll intervals?",INDIRECT("W"&ROW())=0,"--",INDIRECT("W"&ROW())=1,"--",AND(INDIRECT("W"&ROW())=2,INDIRECT("V"&ROW())="weekly"),INDIRECT("T"&ROW())+7,AND(INDIRECT("W"&ROW())=2,INDIRECT("V"&ROW())="bi-weekly"),INDIRECT("T"&ROW())+14,AND(INDIRECT("W"&ROW())=2,INDIRECT("V"&ROW())="monthly"),EDATE(INDIRECT("T"&ROW()),1),AND(INDIRECT("W"&ROW())=3,INDIRECT("V"&ROW())="weekly"),INDIRECT("T"&ROW())+7,AND(INDIRECT("W"&ROW())=3,INDIRECT("V"&ROW())="bi-weekly"),INDIRECT("T"&ROW())+14,AND(INDIRECT("W"&ROW())=3,INDIRECT("V"&ROW())="monthly"),EDATE(INDIRECT("T"&ROW()),1))), 1, 1)',
+        '=ARRAY_CONSTRAIN(ARRAYFORMULA(IFS(AND(INDIRECT("W"&ROW())=3,INDIRECT("V"&ROW())=0),"Payroll intervals?",INDIRECT("W"&ROW())=0,"--",INDIRECT("W"&ROW())=1,"--",AND(INDIRECT("W"&ROW())=2,INDIRECT("V"&ROW())="weekly"),INDIRECT("T"&ROW())+7,AND(INDIRECT("W"&ROW())=2,INDIRECT("V"&ROW())="bi-weekly"),INDIRECT("T"&ROW())+14,AND(INDIRECT("W"&ROW())=2,INDIRECT("V"&ROW())="monthly"),EDATE(INDIRECT("T"&ROW()),1),AND(INDIRECT("W"&ROW())=3,INDIRECT("V"&ROW())="weekly"),INDIRECT("T"&ROW())+7,AND(INDIRECT("W"&ROW())=3,INDIRECT("V"&ROW())="bi-weekly"),INDIRECT("T"&ROW())+14,AND(INDIRECT("W"&ROW())=3,INDIRECT("V"&ROW())="monthly"),EDATE(INDIRECT("T"&ROW()),1))), 1, 1)',
         '=IF(INDIRECT("W"&ROW())=3,INDIRECT("U"&ROW())/3,"--")',
         '=ARRAY_CONSTRAIN(ARRAYFORMULA(IFS(AND(INDIRECT("W"&ROW())=3,INDIRECT("V"&ROW())=0),"Payroll intervals?",INDIRECT("W"&ROW())<3,"--",AND(INDIRECT("W"&ROW())=3,INDIRECT("V"&ROW())="weekly"),INDIRECT("T"&ROW())+14,AND(INDIRECT("W"&ROW())=3,INDIRECT("V"&ROW())="bi-weekly"),INDIRECT("T"&ROW())+28,AND(INDIRECT("W"&ROW())=3,INDIRECT("V"&ROW())="monthly"),EDATE(INDIRECT("T"&ROW()),2))), 1, 1)',
       ];
@@ -240,5 +241,32 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("Could not copy text: ", err);
       }
     );
+  }
+
+  function sendToGoogleSheet(tsvData) {
+    const sheetId = "1Qxyw_Cuq67eGzJzCDSlp6sBYRSWu1wVz4Ju_1pLhQFw"; // Replace with the actual Sheet ID
+
+    const data = {
+      sheetId: sheetId,
+      tsvData: tsvData,
+    };
+    fetch(
+      "https://script.google.com/macros/s/AKfycbxcbKT1TQrEqQNoVxj90dhaBakX1rJeYZxvDwIkuRwpyKh6GHUV2eNc02WJAzkk4_JwXg/exec",
+      {
+        // Replace with your Apps Script Web App URL
+        method: "POST",
+        mode: "no-cors", //remove for local testing
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    )
+      .then((response) => {
+        console.log("Data sent successfully!");
+      })
+      .catch((error) => {
+        console.error("Error sending data: ", error);
+      });
   }
 });

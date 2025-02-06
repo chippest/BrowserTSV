@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Tab Scraper",
+  "name": "Excel Automation",
   "version": "1.0",
-  "description": "Select two tabs and scrape data.",
+  "description": "Automatic Updates to Excel.",
   "action": {
     "default_popup": "popup.html"
   },
