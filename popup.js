@@ -186,8 +186,6 @@ document.addEventListener("DOMContentLoaded", () => {
       baseRow[21] = "";
       baseRow[22] = "";
     }
-    console.log(defaultTextField.value);
-    console.log(baseRow[17]);
 
     // --- Build additional cells (from Loan Page) based on termVal ---
     let additional = [];
