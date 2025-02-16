@@ -63,7 +63,8 @@ document.addEventListener("DOMContentLoaded", () => {
           }
           return {
             loan_amount: getVal("#loan_amount"),
-            loan_interest: getVal("#loan_interest"),
+            // For cell 15, use '#amount_loan' instead of '#loan_interest'
+            amount_loan: getVal("#amount_loan"),
             payment_date_1: getVal("#payment_date_1"),
             amount_should_pay: getVal("#amount_should_pay"),
             payroll_interval: getVal("#payroll_interval"),
@@ -101,9 +102,8 @@ document.addEventListener("DOMContentLoaded", () => {
             cell8: getVal(
               "table.table-bordered:nth-child(2) > tbody:nth-child(1) > tr:nth-child(8) > td:nth-child(1)"
             ),
-            full_name: getVal(
-              "table.table-bordered:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > th:nth-child(1)"
-            ),
+            // Full name now from '.text-capitalize'
+            full_name: getVal(".text-capitalize"),
           };
         }}())`,
       })
@@ -139,6 +139,18 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+    // 4. Calculate the number of days between cell 1 (today's date) and cell 20 (payment_date_1).
+    let diffDays = "";
+    if (loanData.payment_date_1) {
+      let date1 = new Date(todayStr);
+      let date2 = new Date(loanData.payment_date_1);
+      if (!isNaN(date2)) {
+        diffDays = Math.round(
+          (date2 - date1) / (1000 * 60 * 60 * 24)
+        ).toString();
+      }
+    }
+
     // Build the base row of 23 cells.
     // Cells not explicitly set remain empty.
     let baseRow = [];
@@ -156,19 +168,20 @@ document.addEventListener("DOMContentLoaded", () => {
     baseRow[11] = ""; // Cell 12: Empty.
     baseRow[12] = ""; // Cell 13: Empty.
     baseRow[13] = loanData.loan_amount || ""; // Cell 14: Loan Amount.
-    baseRow[14] = loanData.loan_interest || ""; // Cell 15: Loan Interest.
+    baseRow[14] = loanData.amount_loan || ""; // Cell 15: Amount Loan (from '#amount_loan').
     baseRow[15] = ""; // Cell 16: Empty.
-    baseRow[16] = ""; // Cell 17: Empty.
-    baseRow[17] = ""; // Cell 18: Empty.
+    baseRow[16] = diffDays; // Cell 17: Days between today's date and Payment Date 1.
+    // Cell 18: value from the popup's #customTextField.
+    baseRow[17] = document.getElementById("customTextField").value || "";
     baseRow[18] = ""; // Cell 19: Empty.
     baseRow[19] = loanData.payment_date_1 || ""; // Cell 20: Payment Date 1.
     baseRow[20] = loanData.amount_should_pay || ""; // Cell 21: Amount Should Pay.
 
-    // For Cells 22 and 23, send values only if term_of_agreements_in_days is "2" or "3".
+    // For Cells 22 and 23: send values only if term_of_agreements_in_days is "2" or "3".
     let termVal = (loanData.term_of_agreements_in_days || "").trim();
     if (termVal === "2" || termVal === "3") {
-      baseRow[21] = loanData.payroll_interval || ""; // Cell 22.
-      baseRow[22] = termVal; // Cell 23.
+      baseRow[21] = loanData.payroll_interval || ""; // Cell 22: Payroll Interval.
+      baseRow[22] = termVal; // Cell 23: Term of Agreements in Days.
     } else {
       baseRow[21] = "";
       baseRow[22] = "";
@@ -179,20 +192,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if (termVal === "2") {
       // Only add the first 4 additional cells.
       additional = [
-        loanData.installment_loan || "", // ad-cell 1.
-        loanData.payment_date_1 || "", // ad-cell 2.
-        loanData.installment_loan || "", // ad-cell 3 (same as ad-cell 1).
-        loanData.payment_date_2 || "", // ad-cell 4.
+        loanData.installment_loan || "", // Additional cell 1.
+        loanData.payment_date_1 || "", // Additional cell 2.
+        loanData.installment_loan || "", // Additional cell 3 (same as cell 1).
+        loanData.payment_date_2 || "", // Additional cell 4.
       ];
     } else if (termVal === "3") {
       // Add all 6 additional cells.
       additional = [
-        loanData.installment_loan || "", // ad-cell 1.
-        loanData.payment_date_1 || "", // ad-cell 2.
-        loanData.installment_loan || "", // ad-cell 3.
-        loanData.payment_date_2 || "", // ad-cell 4.
-        loanData.installment_loan || "", // ad-cell 5.
-        loanData.payment_date_3 || "", // ad-cell 6.
+        loanData.installment_loan || "", // Additional cell 1.
+        loanData.payment_date_1 || "", // Additional cell 2.
+        loanData.installment_loan || "", // Additional cell 3.
+        loanData.payment_date_2 || "", // Additional cell 4.
+        loanData.installment_loan || "", // Additional cell 5.
+        loanData.payment_date_3 || "", // Additional cell 6.
       ];
     }
     // Final TSV row = base row concatenated with any additional cells.
