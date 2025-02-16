@@ -171,8 +171,8 @@ document.addEventListener("DOMContentLoaded", () => {
     baseRow[14] = loanData.amount_loan || ""; // Cell 15: Amount Loan (from '#amount_loan').
     baseRow[15] = ""; // Cell 16: Empty.
     baseRow[16] = diffDays; // Cell 17: Days between today's date and Payment Date 1.
-    // Cell 18: value from the popup's #customTextField.
-    baseRow[17] = document.getElementById("customTextField").value || "";
+    // Cell 18: value from the popup's #defaultTextField.
+    baseRow[17] = defaultTextField.value || "";
     baseRow[18] = ""; // Cell 19: Empty.
     baseRow[19] = loanData.payment_date_1 || ""; // Cell 20: Payment Date 1.
     baseRow[20] = loanData.amount_should_pay || ""; // Cell 21: Amount Should Pay.
@@ -186,6 +186,8 @@ document.addEventListener("DOMContentLoaded", () => {
       baseRow[21] = "";
       baseRow[22] = "";
     }
+    console.log(defaultTextField.value);
+    console.log(baseRow[17]);
 
     // --- Build additional cells (from Loan Page) based on termVal ---
     let additional = [];
