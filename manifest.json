@@ -1,11 +1,11 @@
 {
-  "manifest_version": 3,
-  "name": "Excel Automation",
+  "manifest_version": 2,
+  "name": "Two Tab Value Fetcher",
   "version": "1.0",
-  "description": "Automatic Updates to Excel.",
-  "action": {
-    "default_popup": "popup.html"
-  },
-  "permissions": ["tabs", "activeTab", "scripting", "storage"],
-  "host_permissions": ["<all_urls>"]
+  "description": "Select two tabs and fetch values from specified elements on each.",
+  "permissions": ["tabs", "<all_urls>"],
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_title": "Tab Value Fetcher"
+  }
 }

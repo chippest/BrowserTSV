@@ -1,37 +1,39 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>ChromeTSV</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta charset="utf-8" />
+    <title>Tab Value Fetcher</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 10px;
+        width: 300px;
+      }
+      select,
+      button {
+        margin: 5px 0;
+        width: 100%;
+        padding: 5px;
+      }
+      #result {
+        margin-top: 10px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        background: #f9f9f9;
+      }
+    </style>
   </head>
   <body>
-    <h1>Select Tabs</h1>
+    <h2>Tab Value Fetcher</h2>
+    <label for="tab1Select">Select First Tab:</label>
+    <select id="tab1Select"></select>
 
-    <div class="tab-select">
-      <label for="loanPageSelect">Loan Page:</label>
-      <select id="loanPageSelect"></select>
-    </div>
+    <label for="tab2Select">Select Second Tab:</label>
+    <select id="tab2Select"></select>
 
-    <div class="tab-select">
-      <label for="bankStatementSelect">Bank Statement:</label>
-      <select id="bankStatementSelect"></select>
-    </div>
-    <div id="default-text-setting">
-      <label for="defaultTextField">User:</label>
-      <input type="text" id="defaultTextField" />
-      <button id="saveDefaultButton">Save Default</button>
-    </div>
+    <button id="fetchButton">Fetch Values</button>
 
-    <input
-      type="text"
-      id="customTextField"
-      placeholder="Enter text for field 18"
-      style="display: none"
-    />
-
-    <button id="scrapeButton">Send Data</button>
-
-    <div id="results"></div>
+    <div id="result"></div>
 
     <script src="popup.js"></script>
   </body>
