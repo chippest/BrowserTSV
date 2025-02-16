@@ -2,38 +2,125 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Tab Value Fetcher</title>
+    <title>ChromeTSV</title>
+    <link rel="stylesheet" href="style.css" />
     <style>
       body {
         font-family: Arial, sans-serif;
         padding: 10px;
-        width: 300px;
+        width: 320px;
+      }
+      h1 {
+        font-size: 18px;
+      }
+      .tab-select,
+      div {
+        margin-bottom: 10px;
+      }
+      label {
+        display: block;
+        margin-bottom: 3px;
       }
       select,
+      input,
       button {
-        margin: 5px 0;
         width: 100%;
         padding: 5px;
-      }
-      #result {
-        margin-top: 10px;
-        padding: 5px;
-        border: 1px solid #ccc;
-        background: #f9f9f9;
+        box-sizing: border-box;
       }
     </style>
   </head>
   <body>
-    <h2>Tab Value Fetcher</h2>
-    <label for="tab1Select">Select First Tab:</label>
-    <select id="tab1Select"></select>
+    <h1>Select Tabs</h1>
 
-    <label for="tab2Select">Select Second Tab:</label>
-    <select id="tab2Select"></select>
+    <div class="tab-select">
+      <label for="loanPageSelect">Loan Page:</label>
+      <select id="loanPageSelect"></select>
+    </div>
 
-    <button id="fetchButton">Fetch Values</button>
+    <div class="tab-select">
+      <label for="bankStatementSelect">Bank Statement:</label>
+      <select id="bankStatementSelect"></select>
+    </div>
 
-    <div id="result"></div>
+    <div>
+      <label for="monthSelect">Last Loan Month:</label>
+      <select id="monthSelect">
+        <option value="" data-start-row="">New Client</option>
+        <option value="jan" data-start-row="10015" data-year="2024">
+          Jan 2024
+        </option>
+        <option value="feb" data-start-row="10448" data-year="2024">
+          Feb 2024
+        </option>
+        <option value="mar" data-start-row="10900" data-year="2024">
+          Mar 2024
+        </option>
+        <option value="apr" data-start-row="11354" data-year="2024">
+          Apr 2024
+        </option>
+        <option value="may" data-start-row="11805" data-year="2024">
+          May 2024
+        </option>
+        <option value="jun" data-start-row="12292" data-year="2024">
+          Jun 2024
+        </option>
+        <option value="jul" data-start-row="12665" data-year="2024">
+          Jul 2024
+        </option>
+        <option value="aug" data-start-row="13235" data-year="2024">
+          Aug 2024
+        </option>
+        <option value="sep" data-start-row="13839" data-year="2024">
+          Sep 2024
+        </option>
+        <option value="oct" data-start-row="14528" data-year="2024">
+          Oct 2024
+        </option>
+        <option value="nov" data-start-row="15374" data-year="2024">
+          Nov 2024
+        </option>
+        <option value="dec" data-start-row="16349" data-year="2024">
+          Dec 2024
+        </option>
+        <option value="jan" data-start-row="17454" data-year="2025">
+          Jan 2025
+        </option>
+        <option value="feb" data-start-row="18519" data-year="2025">
+          Feb 2025
+        </option>
+        <option
+          value="max"
+          data-start-row="19000"
+          data-year="2025"
+          style="display: none"
+        >
+          ignore this option
+        </option>
+      </select>
+    </div>
+
+    <!-- Hidden field if needed -->
+    <input
+      type="text"
+      id="customTextField"
+      placeholder="Enter text for field 18"
+      style="display: none"
+    />
+
+    <div>
+      <label for="startingRowInput">Starting Row:</label>
+      <input type="number" id="startingRowInput" value="18800" />
+    </div>
+
+    <div id="default-text-setting">
+      <label for="defaultTextField">User:</label>
+      <input type="text" id="defaultTextField" />
+    </div>
+
+    <button id="scrapeButton">Send Data</button>
+
+    <div id="results"></div>
 
     <script src="popup.js"></script>
   </body>

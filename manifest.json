@@ -1,11 +1,11 @@
 {
   "manifest_version": 2,
-  "name": "Two Tab Value Fetcher",
+  "name": "Two Tab TSV Sender",
   "version": "1.0",
-  "description": "Select two tabs and fetch values from specified elements on each.",
+  "description": "Fetch values from two tabs, create TSV data, and send it to Google Apps Script.",
   "permissions": ["tabs", "<all_urls>"],
   "browser_action": {
     "default_popup": "popup.html",
-    "default_title": "Tab Value Fetcher"
+    "default_title": "TSV Sender"
   }
 }
